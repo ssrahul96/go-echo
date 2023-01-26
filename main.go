@@ -1,11 +1,11 @@
 package main
 
 import (
+	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ssrahul96/go-echo/models"
-	"github.com/ssrahul96/golang/utils"
 )
 
 func main() {
@@ -14,11 +14,19 @@ func main() {
 	app.All("/", func(c *fiber.Ctx) error {
 		now := time.Now()
 		var data models.LogModel
-		data.Timestamp = now.Unix()
+
+		data.Timestamp = now.UnixNano()
 		data.Headers = c.GetReqHeaders()
-		data.Url = c.BaseURL()
+		data.Url = c.Path()
 		data.Method = c.Method()
-		return c.SendString(utils.FormatJson(data))
+		data.Body = string(c.Body())
+
+		addCont := os.Getenv("ADDITIONAL_CONTENT")
+		if len(addCont) != 0 {
+			data.AdditionalContents = addCont
+		}
+
+		return c.JSON(data)
 	})
 
 	app.Listen(":3000")
