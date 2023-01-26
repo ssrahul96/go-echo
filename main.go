@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"log"
 	"os"
 	"time"
 
@@ -26,6 +28,8 @@ func main() {
 			data.AdditionalContents = addCont
 		}
 
+		logData, _ := json.Marshal(data)
+		log.Print(string(logData))
 		return c.JSON(data)
 	})
 
