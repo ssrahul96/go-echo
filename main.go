@@ -29,5 +29,5 @@ func main() {
 		return c.JSON(data)
 	})
 
-	app.Listen(":3000")
+	app.Listen(":80")
 }
